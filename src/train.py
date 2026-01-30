@@ -27,7 +27,7 @@ from src.utils import (
 )
 
 
-def instantiate_callbacks(cfg: DictConfig) -> List[pl.Callback]:
+def instantiate_callbacks(cfg: DictConfig, compact_logging: bool = False) -> List[pl.Callback]:
     """Instantiate callbacks from config."""
     callbacks = []
     
@@ -38,6 +38,10 @@ def instantiate_callbacks(cfg: DictConfig) -> List[pl.Callback]:
             
             # Skip disabled callbacks
             if "enable" in cb_conf and not cb_conf.enable:
+                continue
+            
+            # Skip progress bar callbacks in compact mode
+            if compact_logging and "ProgressBar" in cb_conf._target_:
                 continue
                 
             callbacks.append(hydra.utils.instantiate(cb_conf))
@@ -150,7 +154,7 @@ def main(cfg: DictConfig):
         model: ResNetModule = hydra.utils.instantiate(cfg.model)
         
         # Setup callbacks
-        callbacks = instantiate_callbacks(cfg)
+        callbacks = instantiate_callbacks(cfg, compact_logging=compact_logging)
         
         # Setup loggers
         loggers = instantiate_loggers(cfg)
