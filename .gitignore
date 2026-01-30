@@ -68,7 +68,7 @@ Thumbs.db
 logs/
 outputs/
 multirun/
-data/
+/data/
 checkpoints/
 *.pth
 *.ckpt

@@ -1,0 +1,52 @@
+# SVHN DataModule configuration
+
+_target_: src.data.svhn_datamodule.SVHNDataModule
+
+# Dataset name
+dataset_name: "SVHN"
+
+# Number of classes
+num_classes: 10
+
+# Image size
+image_size: 32
+
+# Data directory
+data_dir: ${paths.data_dir}
+
+# Batch size for DataLoaders
+batch_size: 128
+
+# Number of workers for DataLoaders
+num_workers: 4
+
+# Pin memory for faster data transfer to GPU
+pin_memory: true
+
+# Normalization constants for SVHN
+mean: [0.4377, 0.4438, 0.4728]
+std: [0.1980, 0.2010, 0.1970]
+
+# Data augmentation settings
+augmentation:
+  random_crop: true
+  random_horizontal_flip: false  # SVHN digits shouldn't be flipped
+  color_jitter: true
+  random_erasing: true
+  erasing_probability: 0.5
+
+# Active Learning data splits
+al_splits:
+  total_train_samples: 73257  # SVHN has 73257 training images
+  initial_labeled: 7000
+  calibration_size: 7000
+  # Pool size will be: 73257 - 7000 - 7000 = 59257
+
+# Whether to shuffle train loader
+shuffle: true
+
+# Drop last incomplete batch
+drop_last: false
+
+# Persistent workers
+persistent_workers: true

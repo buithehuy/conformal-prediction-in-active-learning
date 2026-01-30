@@ -1,0 +1,52 @@
+# CIFAR-10 DataModule configuration
+
+_target_: src.data.cifar10_datamodule.CIFAR10DataModule
+
+# Dataset name
+dataset_name: "CIFAR10"
+
+# Number of classes
+num_classes: 10
+
+# Image size
+image_size: 32
+
+# Data directory
+data_dir: ${paths.data_dir}
+
+# Batch size for DataLoaders
+batch_size: 128
+
+# Number of workers for DataLoaders
+num_workers: 4
+
+# Pin memory for faster data transfer to GPU
+pin_memory: true
+
+# Normalization constants for CIFAR-10
+mean: [0.4914, 0.4822, 0.4465]
+std: [0.2023, 0.1994, 0.2010]
+
+# Data augmentation settings
+augmentation:
+  random_crop: true
+  random_horizontal_flip: true
+  color_jitter: true
+  random_erasing: true
+  erasing_probability: 0.5
+
+# Active Learning data splits
+al_splits:
+  total_train_samples: 50000
+  initial_labeled: 5000
+  calibration_size: 5000
+  # Pool size will be: 50000 - 5000 - 5000 = 40000
+
+# Whether to shuffle train loader
+shuffle: true
+
+# Drop last incomplete batch
+drop_last: false
+
+# Persistent workers
+persistent_workers: true

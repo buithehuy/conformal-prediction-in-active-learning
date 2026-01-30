@@ -1,0 +1,54 @@
+# STL-10 DataModule configuration
+
+_target_: src.data.stl10_datamodule.STL10DataModule
+
+# Dataset name
+dataset_name: "STL10"
+
+# Number of classes
+num_classes: 10
+
+# Image size (STL-10 has 96x96 images)
+image_size: 96
+
+# Data directory
+data_dir: ${paths.data_dir}
+
+# Batch size for DataLoaders
+batch_size: 64  # Smaller batch due to larger images
+
+# Number of workers for DataLoaders
+num_workers: 4
+
+# Pin memory for faster data transfer to GPU
+pin_memory: true
+
+# Normalization constants for STL-10
+mean: [0.4467, 0.4398, 0.4066]
+std: [0.2603, 0.2566, 0.2713]
+
+# Data augmentation settings
+augmentation:
+  random_crop: true
+  crop_size: 96
+  padding: 12
+  random_horizontal_flip: true
+  color_jitter: true
+  random_erasing: true
+  erasing_probability: 0.5
+
+# Active Learning data splits
+al_splits:
+  total_train_samples: 5000  # STL-10 has only 5000 labeled training images
+  initial_labeled: 1000
+  calibration_size: 1000
+  # Pool size will be: 5000 - 1000 - 1000 = 3000
+
+# Whether to shuffle train loader
+shuffle: true
+
+# Drop last incomplete batch
+drop_last: false
+
+# Persistent workers
+persistent_workers: true
