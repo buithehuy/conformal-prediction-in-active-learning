@@ -187,8 +187,9 @@ def main(cfg: DictConfig):
         val_acc = val_results[0]["val/acc"]
         val_loss = val_results[0]["val/loss"]
         
-        # Get train accuracy from model's metric (last computed value)
-        train_acc = model.train_acc.compute() * 100.0  # Convert to percentage
+        # Get train accuracy from logged metrics (metrics are in trainer.logged_metrics)
+        # Note: train/acc is already in percentage format from the model logging
+        train_acc = float(trainer.logged_metrics.get("train/acc", 0.0))
         
         # Evaluate on test set
         if not compact_logging:
@@ -218,10 +219,13 @@ def main(cfg: DictConfig):
         
         if compact_logging:
             # Compact single-line output
+            # Round 0 = baseline (no acquired samples yet)
+            # Round N = acquired N * budget_per_round samples
+            acquired_samples = round_idx * budget_per_round
             total_pool = len(datamodule.labeled_idx) + len(datamodule.pool_idx)
             trained_pct = (len(datamodule.labeled_idx) / total_pool) * 100
             zero_count = sum(1 for pred_set in test_pred_sets if len(pred_set) == 0)
-            print(f"R{round_idx:2d}: Acc={test_acc:5.2f}% | Trained={len(datamodule.labeled_idx):5d} ({trained_pct:4.1f}%) | Cov={cp_coverage:.3f} | AvgSet={cp_avg_set_size:.2f} | Zero={zero_count}")
+            print(f"R{round_idx:2d}: Acc={test_acc:5.2f}% | Acquired={acquired_samples:5d} (Total={len(datamodule.labeled_idx):5d}, {trained_pct:4.1f}%) | Cov={cp_coverage:.3f} | AvgSet={cp_avg_set_size:.2f} | Zero={zero_count}")
         else:
             print(f"  CP Coverage: {cp_coverage:.4f}")
             print(f"  CP Avg Set Size: {cp_avg_set_size:.2f}")
