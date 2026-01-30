@@ -10,9 +10,8 @@ readme = "README.md"
 requires-python = ">=3.8"
 license = {text = "MIT"}
 
-[tool.setuptools.packages.find]
-where = ["."]
-include = ["src*"]
+[tool.setuptools]
+packages = ["src", "src.data", "src.models", "src.utils"]
 
 [tool.black]
 line-length = 100
