@@ -1,8 +1,6 @@
 # @package _global_
 
 # Combined V-shaped strategy: Entropy + CP V-shaped
-defaults:
-  - override /al: combined_v_shaped
 
 # Experiment name
 task_name: "al_combined_v_shaped"

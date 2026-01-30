@@ -1,8 +1,6 @@
 # @package _global_
 
 # Random sampling strategy (baseline)
-defaults:
-  - override /al: random
 
 # Experiment name
 task_name: "al_random"

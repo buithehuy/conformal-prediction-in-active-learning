@@ -1,8 +1,6 @@
 # @package _global_
 
 # Conformal Prediction set size sampling
-defaults:
-  - override /al: cp_size
 
 # Experiment name
 task_name: "al_cp_size"

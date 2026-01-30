@@ -1,8 +1,6 @@
 # @package _global_
 
 # Combined strategy: Entropy + CP set size
-defaults:
-  - override /al: combined
 
 # Experiment name
 task_name: "al_combined"

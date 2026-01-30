@@ -1,8 +1,6 @@
 # @package _global_
 
 # Least confidence sampling strategy
-defaults:
-  - override /al: least_confidence
 
 # Experiment name
 task_name: "al_least_confidence"
