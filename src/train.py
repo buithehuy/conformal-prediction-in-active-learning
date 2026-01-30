@@ -85,7 +85,7 @@ def main(cfg: DictConfig):
     
     # Initialize data module
     print("\n" + "="*60)
-    print("Initializing CIFAR-10 DataModule")
+    print("Initializing DataModule")
     print("="*60)
     datamodule: CIFAR10DataModule = hydra.utils.instantiate(cfg.data)
     datamodule.prepare_data()
