@@ -33,7 +33,6 @@ enable_progress_bar: true
 
 # Model summary
 enable_model_summary: true
-max_depth: 1
 
 # Validation settings
 check_val_every_n_epoch: 1
