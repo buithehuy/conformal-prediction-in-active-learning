@@ -184,18 +184,17 @@ def main(cfg: DictConfig):
         # Get training and validation metrics
         # Run validation to get updated metrics
         val_results = trainer.validate(model, datamodule=datamodule, verbose=False)
-        val_acc = val_results[0]["val/acc"]
+        val_acc = val_results[0]["val/acc"] * 100.0  # Convert to percentage
         val_loss = val_results[0]["val/loss"]
         
-        # Get train accuracy from logged metrics (metrics are in trainer.logged_metrics)
-        # Note: train/acc is already in percentage format from the model logging
-        train_acc = float(trainer.logged_metrics.get("train/acc", 0.0))
+        # Get train accuracy from logged metrics (multiply by 100 for percentage)
+        train_acc = float(trainer.logged_metrics.get("train/acc", 0.0)) * 100.0
         
         # Evaluate on test set
         if not compact_logging:
             print(f"\nEvaluating on test set...")
         test_results = trainer.test(model, datamodule=datamodule, verbose=False)
-        test_acc = test_results[0]["test/acc"]
+        test_acc = test_results[0]["test/acc"] * 100.0  # Convert to percentage
         
         # Compute Conformal Prediction metrics
         if not compact_logging:

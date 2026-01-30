@@ -95,9 +95,9 @@ class ResNetModule(pl.LightningModule):
         self.train_loss(loss)
         self.train_acc(preds, targets)
         
-        # Log metrics (multiply accuracy by 100 for percentage display)
+        # Log metrics
         self.log("train/loss", self.train_loss, on_step=False, on_epoch=True, prog_bar=True)
-        self.log("train/acc", self.train_acc * 100.0, on_step=False, on_epoch=True, prog_bar=True)
+        self.log("train/acc", self.train_acc, on_step=False, on_epoch=True, prog_bar=True)
         
         return loss
     
@@ -113,9 +113,9 @@ class ResNetModule(pl.LightningModule):
         self.val_loss(loss)
         self.val_acc(preds, targets)
         
-        # Log metrics (multiply accuracy by 100 for percentage display)
+        # Log metrics
         self.log("val/loss", self.val_loss, on_step=False, on_epoch=True, prog_bar=True)
-        self.log("val/acc", self.val_acc * 100.0, on_step=False, on_epoch=True, prog_bar=True)
+        self.log("val/acc", self.val_acc, on_step=False, on_epoch=True, prog_bar=True)
         
         return loss
     
@@ -133,9 +133,9 @@ class ResNetModule(pl.LightningModule):
         self.test_loss(loss)
         self.test_acc(preds, targets)
         
-        # Log metrics (multiply accuracy by 100 for percentage display)
+        # Log metrics
         self.log("test/loss", self.test_loss, on_step=False, on_epoch=True, prog_bar=True)
-        self.log("test/acc", self.test_acc * 100.0, on_step=False, on_epoch=True, prog_bar=True)
+        self.log("test/acc", self.test_acc, on_step=False, on_epoch=True, prog_bar=True)
         
         return loss
     
