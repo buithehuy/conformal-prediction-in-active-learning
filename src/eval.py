@@ -60,7 +60,7 @@ def main(cfg: DictConfig):
     print(f"\nLoading checkpoint: {cfg.ckpt_path}")
     
     # Initialize data module
-    print("\nInitializing CIFAR-10 DataModule...")
+    print("\nInitializing DataModule...")
     datamodule: CIFAR10DataModule = hydra.utils.instantiate(cfg.data)
     datamodule.prepare_data()
     datamodule.setup("test")
