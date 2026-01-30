@@ -1,0 +1,47 @@
+# @package _global_
+
+# Main configuration for Active Learning training
+defaults:
+  - _self_
+  - data: cifar10
+  - model: resnet18
+  - callbacks: default
+  - logger: tensorboard
+  - trainer: default
+  - paths: default
+  - hydra: default
+
+# Task name for experiment tracking
+task_name: "al_training"
+
+# Tags for organizing experiments
+tags: ["cifar10", "active_learning", "conformal_prediction"]
+
+# Random seed for reproducibility
+seed: 42
+
+# Active Learning settings
+al:
+  strategy: "random"  # Override with experiment configs
+  num_rounds: 20
+  budget_per_round: 2000
+  initial_labeled: 5000
+  calibration_size: 5000
+
+# Conformal prediction settings
+conformal:
+  alpha: 0.1  # 1 - alpha = coverage level (90%)
+
+# Combined strategy weights (for combined strategies)
+combined_weights:
+  entropy_weight: 0.5
+  cp_weight: 0.5
+
+# Print config tree
+print_config: false
+
+# Ignore warnings
+ignore_warnings: true
+
+# Disable python warnings
+disable_python_warnings: true

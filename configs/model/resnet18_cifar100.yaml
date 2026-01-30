@@ -1,0 +1,8 @@
+# ResNet18 model configuration for CIFAR-100
+# Extends base ResNet18 config with 100 classes
+
+defaults:
+  - resnet18
+
+# Override number of classes for CIFAR-100
+num_classes: 100

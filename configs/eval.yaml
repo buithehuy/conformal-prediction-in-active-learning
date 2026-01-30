@@ -1,0 +1,26 @@
+# @package _global_
+
+# Main configuration for evaluation
+defaults:
+  - _self_
+  - data: cifar10
+  - model: resnet18
+  - logger: tensorboard
+  - paths: default
+  - hydra: default
+
+# Task name
+task_name: "al_evaluation"
+
+# Checkpoint path to evaluate
+ckpt_path: null  # Provide via command line: ckpt_path=/path/to/checkpoint.ckpt
+
+# Random seed
+seed: 42
+
+# Conformal prediction settings
+conformal:
+  alpha: 0.1
+
+# Print config
+print_config: false

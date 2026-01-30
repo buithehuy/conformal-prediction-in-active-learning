@@ -1,0 +1,17 @@
+# @package _global_
+
+# Entropy sampling strategy
+defaults:
+  - override /al: entropy
+
+# Experiment name
+task_name: "al_entropy"
+
+# Tags
+tags: ["uncertainty", "entropy"]
+
+# AL strategy settings
+al:
+  strategy: "entropy"
+  num_rounds: 20
+  budget_per_round: 2000

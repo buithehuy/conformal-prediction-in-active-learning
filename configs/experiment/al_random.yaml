@@ -1,0 +1,17 @@
+# @package _global_
+
+# Random sampling strategy (baseline)
+defaults:
+  - override /al: random
+
+# Experiment name
+task_name: "al_random"
+
+# Tags
+tags: ["baseline", "random"]
+
+# AL strategy settings
+al:
+  strategy: "random"
+  num_rounds: 20
+  budget_per_round: 2000

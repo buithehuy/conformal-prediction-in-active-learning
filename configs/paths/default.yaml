@@ -1,0 +1,16 @@
+# Project paths configuration
+
+# Path to project root directory
+root_dir: ${oc.env:PROJECT_ROOT,./}
+
+# Path to data directory
+data_dir: ${paths.root_dir}/data
+
+# Path to logs directory
+log_dir: ${paths.root_dir}/logs
+
+# Path to output directory
+output_dir: ${hydra:runtime.output_dir}
+
+# Path to working directory
+work_dir: ${hydra:runtime.cwd}

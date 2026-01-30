@@ -1,0 +1,11 @@
+# ResNet18 model configuration for STL-10
+# Extends base ResNet18 config for 96x96 images
+
+defaults:
+  - resnet18
+
+# STL-10 specific (96x96 images, 10 classes)
+num_classes: 10
+
+# Don't use CIFAR modification for STL-10 (images are 96x96, not 32x32)
+cifar_modification: false

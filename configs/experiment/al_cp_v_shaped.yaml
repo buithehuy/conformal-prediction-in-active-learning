@@ -1,0 +1,17 @@
+# @package _global_
+
+# Conformal Prediction V-shaped sampling
+defaults:
+  - override /al: cp_v_shaped
+
+# Experiment name
+task_name: "al_cp_v_shaped"
+
+# Tags
+tags: ["conformal_prediction", "cp_v_shaped"]
+
+# AL strategy settings
+al:
+  strategy: "cp_v_shaped"
+  num_rounds: 20
+  budget_per_round: 2000

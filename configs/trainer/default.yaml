@@ -1,0 +1,54 @@
+# PyTorch Lightning Trainer configuration
+
+_target_: pytorch_lightning.Trainer
+
+# Maximum number of epochs per AL round
+max_epochs: 10
+
+# Accelerator and devices
+accelerator: auto  # auto, cpu, gpu, tpu
+devices: auto  # auto, or specific device IDs
+
+# Precision (16, 32, or 'bf16')
+precision: 32
+
+# Gradient clipping
+gradient_clip_val: 0.0
+gradient_clip_algorithm: "norm"
+
+# Deterministic mode for reproducibility (slower but reproducible)
+deterministic: false
+
+# Benchmark mode for faster training (may reduce reproducibility)
+benchmark: true
+
+# Logging
+log_every_n_steps: 50
+
+# Checkpointing
+enable_checkpointing: true
+
+# Progress bar
+enable_progress_bar: true
+
+# Model summary
+enable_model_summary: true
+max_depth: 1
+
+# Validation settings
+check_val_every_n_epoch: 1
+val_check_interval: null
+
+# Limit batches (set to fraction for debugging)
+limit_train_batches: null
+limit_val_batches: null
+limit_test_batches: null
+
+# Fast dev run for debugging (runs 1 batch of train/val/test)
+fast_dev_run: false
+
+# Detect anomaly (for debugging)
+detect_anomaly: false
+
+# Profiler (null, simple, advanced, or pytorch)
+profiler: null

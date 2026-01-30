@@ -1,0 +1,33 @@
+# ResNet18 model configuration
+
+_target_: src.models.resnet_module.ResNetModule
+
+# Model architecture
+arch: "resnet18"
+
+# Number of output classes
+num_classes: 10
+
+# Use pretrained ImageNet weights
+pretrained: true
+
+# CIFAR-10 specific modifications
+cifar_modification: true  # Modifies conv1 and removes maxpool for 32x32 images
+
+# Optimizer configuration
+optimizer:
+  _target_: torch.optim.SGD
+  _partial_: true
+  lr: 0.01
+  momentum: 0.9
+  weight_decay: 0.0005
+
+# Learning rate scheduler
+scheduler:
+  _target_: torch.optim.lr_scheduler.CosineAnnealingLR
+  _partial_: true
+  T_max: 10  # Will be set to epochs_per_round in training script
+  eta_min: 0.0
+
+# Compile model for faster training (PyTorch 2.0+)
+compile: false

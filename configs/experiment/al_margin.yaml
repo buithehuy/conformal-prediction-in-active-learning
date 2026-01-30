@@ -1,0 +1,17 @@
+# @package _global_
+
+# Margin sampling strategy
+defaults:
+  - override /al: margin
+
+# Experiment name
+task_name: "al_margin"
+
+# Tags
+tags: ["uncertainty", "margin"]
+
+# AL strategy settings
+al:
+  strategy: "margin"
+  num_rounds: 20
+  budget_per_round: 2000
