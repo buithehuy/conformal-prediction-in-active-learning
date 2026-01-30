@@ -40,6 +40,9 @@ combined_weights:
 # Print config tree
 print_config: false
 
+# Compact logging mode (concise single-line progress)
+compact_logging: false
+
 # Ignore warnings
 ignore_warnings: true
 

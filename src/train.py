@@ -105,14 +105,22 @@ def main(cfg: DictConfig):
     entropy_weight = combined_weights.get("entropy_weight", 0.5)
     cp_weight = combined_weights.get("cp_weight", 0.5)
     
-    print(f"\nActive Learning Configuration:")
-    print(f"  Strategy: {strategy_name}")
-    print(f"  Num rounds: {num_rounds}")
-    print(f"  Budget per round: {budget_per_round}")
-    print(f"  CP alpha: {cp_alpha}")
-    if "combined" in strategy_name:
-        print(f"  Entropy weight: {entropy_weight}")
-        print(f"  CP weight: {cp_weight}")
+    # Compact logging mode
+    compact_logging = cfg.get("compact_logging", False)
+    
+    if not compact_logging:
+        print(f"\nActive Learning Configuration:")
+        print(f"  Strategy: {strategy_name}")
+        print(f"  Num rounds: {num_rounds}")
+        print(f"  Budget per round: {budget_per_round}")
+        print(f"  CP alpha: {cp_alpha}")
+        if "combined" in strategy_name:
+            print(f"  Entropy weight: {entropy_weight}")
+            print(f"  CP weight: {cp_weight}")
+    else:
+        print("\n" + "="*70)
+        print(f"{strategy_name.upper()}")
+        print("="*70)
     
     # Results tracking
     results = {
@@ -126,15 +134,17 @@ def main(cfg: DictConfig):
     }
     
     # Active Learning Loop
-    print("\n" + "="*60)
-    print("Starting Active Learning Loop")
-    print("="*60)
+    if not compact_logging:
+        print("\n" + "="*60)
+        print("Starting Active Learning Loop")
+        print("="*60)
     
     for round_idx in range(num_rounds):
-        print(f"\n{'='*60}")
-        print(f"Round {round_idx + 1}/{num_rounds}")
-        print(f"Labeled samples: {len(datamodule.labeled_idx)}")
-        print(f"{'='*60}")
+        if not compact_logging:
+            print(f"\n{'='*60}")
+            print(f"Round {round_idx + 1}/{num_rounds}")
+            print(f"Labeled samples: {len(datamodule.labeled_idx)}")
+            print(f"{'='*60}")
         
         # Initialize model for this round
         model: ResNetModule = hydra.utils.instantiate(cfg.model)
@@ -146,31 +156,48 @@ def main(cfg: DictConfig):
         loggers = instantiate_loggers(cfg)
         
         # Initialize trainer
-        trainer: Trainer = hydra.utils.instantiate(
-            cfg.trainer,
-            callbacks=callbacks,
-            logger=loggers
-        )
+        if compact_logging:
+            # Disable verbose logging in compact mode
+            trainer: Trainer = hydra.utils.instantiate(
+                cfg.trainer,
+                callbacks=callbacks,
+                logger=loggers,
+                enable_progress_bar=False,
+                enable_model_summary=False
+            )
+        else:
+            trainer: Trainer = hydra.utils.instantiate(
+                cfg.trainer,
+                callbacks=callbacks,
+                logger=loggers
+            )
         
         # Train model
-        print(f"\nTraining model...")
+        if not compact_logging:
+            print(f"\nTraining model...")
         trainer.fit(model, datamodule=datamodule)
         
+        # Get training and validation metrics
+        # Run validation to get updated metrics
+        val_results = trainer.validate(model, datamodule=datamodule, verbose=False)
+        val_acc = val_results[0]["val/acc"]
+        val_loss = val_results[0]["val/loss"]
+        
+        # Get train accuracy from model's metric (last computed value)
+        train_acc = model.train_acc.compute() * 100.0  # Convert to percentage
+        
         # Evaluate on test set
-        print(f"\nEvaluating on test set...")
+        if not compact_logging:
+            print(f"\nEvaluating on test set...")
         test_results = trainer.test(model, datamodule=datamodule, verbose=False)
         test_acc = test_results[0]["test/acc"]
         
-        # Get training accuracy from trainer
-        train_acc = trainer.callback_metrics.get("train/acc", 0.0)
-        val_acc = trainer.callback_metrics.get("val/acc", 0.0)
-        
-        print(f"  Train Acc: {train_acc:.2f}%")
-        print(f"  Val Acc:   {val_acc:.2f}%")
-        print(f"  Test Acc:  {test_acc:.2f}%")
-        
         # Compute Conformal Prediction metrics
-        print(f"\nComputing Conformal Prediction metrics...")
+        if not compact_logging:
+            print(f"  Train Acc: {train_acc:.2f}%")
+            print(f"  Val Acc:   {val_acc:.2f}%")
+            print(f"  Test Acc:  {test_acc:.2f}%")
+            print(f"\nComputing Conformal Prediction metrics...")
         model.eval()
         model = model.to(device)
         
@@ -185,8 +212,15 @@ def main(cfg: DictConfig):
         cp_coverage = compute_coverage(test_pred_sets, test_labels)
         cp_avg_set_size = compute_avg_set_size(test_pred_sets)
         
-        print(f"  CP Coverage: {cp_coverage:.4f}")
-        print(f"  CP Avg Set Size: {cp_avg_set_size:.2f}")
+        if compact_logging:
+            # Compact single-line output
+            total_pool = len(datamodule.labeled_idx) + len(datamodule.pool_idx)
+            trained_pct = (len(datamodule.labeled_idx) / total_pool) * 100
+            zero_count = sum(1 for pred_set in test_pred_sets if len(pred_set) == 0)
+            print(f"R{round_idx:2d}: Acc={test_acc:5.2f}% | Trained={len(datamodule.labeled_idx):5d} ({trained_pct:4.1f}%) | Cov={cp_coverage:.3f} | AvgSet={cp_avg_set_size:.2f} | Zero={zero_count}")
+        else:
+            print(f"  CP Coverage: {cp_coverage:.4f}")
+            print(f"  CP Avg Set Size: {cp_avg_set_size:.2f}")
         
         # Store results
         results["round"].append(round_idx + 1)
@@ -202,7 +236,8 @@ def main(cfg: DictConfig):
             break
         
         # Acquisition: Select samples from pool
-        print(f"\nAcquiring {budget_per_round} samples using '{strategy_name}' strategy...")
+        if not compact_logging:
+            print(f"\nAcquiring {budget_per_round} samples using '{strategy_name}' strategy...")
         pool_loader = datamodule.pool_dataloader()
         pool_probs, _ = get_probabilities(model.model, pool_loader, device=device)
         
