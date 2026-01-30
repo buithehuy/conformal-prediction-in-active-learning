@@ -9,7 +9,6 @@ defaults:
   - logger: tensorboard
   - trainer: default
   - paths: default
-  - hydra: default
 
 # Task name for experiment tracking
 task_name: "al_training"
