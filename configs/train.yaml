@@ -9,6 +9,7 @@ defaults:
   - logger: tensorboard
   - trainer: default
   - paths: default
+  - optional experiment: null
 
 # Task name for experiment tracking
 task_name: "al_training"
